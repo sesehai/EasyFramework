@@ -79,14 +79,10 @@ class UserController extends CommonController {
 			$menu = $this->getMenu();
 			
 			$array_groups = $this->getGroup();
-			$array_department = $this->getDepartment();
-			$array_apppartner = $this->getApppartner();
 			$array_user = $this->getUser();
 			
 			$this->_view->assign('menu',$menu);
 			$this->_view->assign('groups',$array_groups);
-			$this->_view->assign('departments',$array_department);
-			$this->_view->assign('apppartners',$array_apppartner);
 			$this->_view->assign('users',$array_user);
 			$this->_view->assign('baseUrl',BASE_URL);
 			$this->_view->assign('tplDir',$this->tplDir);
@@ -164,18 +160,10 @@ class UserController extends CommonController {
 			$isall = in_array('all',$isChecked) ? 'isall' : 'notall';
 			
 			$array_dataprivs = $this->getDataprivsByOwnerid($id);
-			$array_department = $this->getDepartment();
-			$isChecked_department = isset($array_dataprivs['department_ids']) ? explode(',',$array_dataprivs['department_ids']) : array(); 
-			$array_apppartner = $this->getApppartner();
-			$isChecked_apppartner = isset($array_dataprivs['apppartner_ids']) ? explode(',',$array_dataprivs['apppartner_ids']) : array(); 
+
 			$array_user = $this->getUser();
 			$isChecked_user = isset($array_dataprivs['user_ids']) ? explode(',',$array_dataprivs['user_ids']) : array(); 
 			
-			$this->_view->assign('department', $array_department);
-			$this->_view->assign('isChecked_department', $isChecked_department);
-			
-			$this->_view->assign('apppartner', $array_apppartner);
-			$this->_view->assign('isChecked_apppartner', $isChecked_apppartner);
 			
 			$this->_view->assign('users', $array_user);
 			$this->_view->assign('isChecked_user', $isChecked_user);
@@ -298,41 +286,8 @@ class UserController extends CommonController {
 		return $array_menu;
 	}
 	
-	/**
-	 * 取部门
-	 *
-	 */
-	private function getDepartment(){
-		$array_department = array();
-		$oMclientDepartment = Base::M('mclientDepartment');
-		$oMclientDepartment->setMcEnable($value = false);
-		$array_department_rows = $oMclientDepartment->query("SELECT `id`,`name` FROM `{$oMclientDepartment->table_name}` WHERE `isdel` = '1' ");
-		if( isset($array_department_rows) ){
-			foreach($array_department_rows as $row){
-				$array_department['name'][$row['id']]= $row['name'];
-				$array_department['value'][$row['id']]= $row['id'];
-			}
-		}
-		return $array_department;
-	}
+
 	
-	/**
-	 * 取渠道
-	 *
-	 */
-	private function getApppartner(){
-		$array_apppartner = array();
-		$oMclientApppartner = Base::M('mclientApppartner');
-		$oMclientApppartner->setMcEnable($value = false);
-		$array_apppartner_rows = $oMclientApppartner->query("SELECT `id`,`pid`,`name` FROM `{$oMclientApppartner->table_name}` WHERE `isdel` = '1' ");
-		if( isset($array_apppartner_rows) ){
-			foreach($array_apppartner_rows as $row){
-				$array_apppartner['name'][$row['id']]= $row['name'];
-				$array_apppartner['value'][$row['id']]= $row['pid'];
-			}
-		}
-		return $array_apppartner;
-	}
 	
 	/**
 	 * 取用户
